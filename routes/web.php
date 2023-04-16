@@ -4,6 +4,7 @@ use App\Models\Photo;
 use App\Models\Country;
 use App\Models\User;
 use App\Models\Tag;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+/*
 Route::get('/', function () {
     return view('welcome');
 });
@@ -209,4 +210,30 @@ Route::get('/tag/{id}/video', function ($id) {
     foreach($tag->videos as $video){
         echo $video;
     }
+});
+*/
+//forms logic crud application
+Route::resource('/posts', 'App\Http\Controllers\PostsController');
+Route::group(['middleware'=>'web'], function(){
+    Route::resource('/posts', 'App\Http\Controllers\PostsController');
+    Route::get('/dates', function(){
+        $date = new DateTime('+1 week');
+        echo $date->format('m-d-Y');
+        echo '<br>';
+        //Carbon plugin for dates
+        echo Carbon::now()->addDays(10)->diffForHumans();
+        echo '<br>';
+        echo Carbon::now()->subMonths(5)->diffForHumans();
+        echo '<br>';
+        echo Carbon::now()->yesterday()->diffForHumans();
+    });
+    Route::get('/getname', function(){
+        $user = User::find(1);
+        echo $user->name;
+    });
+    Route::get('/setname', function(){
+        $user = User::find(1);
+        $user->name = "william";
+        $user->save();
+    });
 });

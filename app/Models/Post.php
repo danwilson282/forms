@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+    public $directory = "/images/";
     use HasFactory;
     use SoftDeletes;
     //to change default name
@@ -18,7 +19,8 @@ class Post extends Model
     //will let be fillable
     protected $fillable = [
         'title',
-        'content'
+        'content',
+        'path'
     ];
     //for soft delete
     protected $dates = ['deleted_at'];
@@ -32,5 +34,12 @@ class Post extends Model
     public function tags(){
         return $this->morphToMany('App\Models\Tag', 'taggable');
     }
-
+    //querry scope
+    public static function scopeLatest($query){
+        return $query->orderBy('title', 'asc')->get();
+    }
+    //query scopes
+    public function getPathAttribute($value){
+        return $this->directory.$value;
+    }
 }
